@@ -1,28 +1,28 @@
 import random
 import time
 
-GRID_WIDTH = 60
-GRID_HEIGHT = 40
+GRID_WIDTH = 30
+GRID_HEIGHT = 30
 
 class GameOfLife:
     def __init__(self):
-        self.create_board()
-        self.draw_board()
+        self.createBoard()
+        self.drawBoard()
         self.paused = True
 
-    def create_board(self):
+    def createBoard(self):
         self.board = [[random.choice([0, 1]) for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
 
-    def draw_board(self):
+    def drawBoard(self):
         for row in range(GRID_HEIGHT):
             for col in range(GRID_WIDTH):
                 if self.board[row][col]:
-                    print("■", end="")
+                    print("⬛", end="")
                 else:
-                    print("□", end="")
+                    print("⬜", end="")
             print()
 
-    def count_neighbors(self, row, col):
+    def countNeighbors(self, row, col):
         count = 0
         for i in [-1, 0, 1]:
             for j in [-1, 0, 1]:
@@ -38,39 +38,37 @@ class GameOfLife:
         new_board = [[False for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
         for row in range(GRID_HEIGHT):
             for col in range(GRID_WIDTH):
-                neighbors = self.count_neighbors(row, col)
+                neighbors = self.countNeighbors(row, col)
                 if self.board[row][col] and (neighbors == 2 or neighbors == 3):
                     new_board[row][col] = True
                 elif not self.board[row][col] and neighbors == 3:
                     new_board[row][col] = True
         self.board = new_board
-        self.draw_board()
+        self.drawBoard()
         if not self.paused:
             time.sleep(0.5)
+            print("========================================")
             self.update()
 
     def start(self):
         self.paused = False
         self.update()
 
-    def stop(self):
-        self.paused = True
-
     def clear(self):
         self.board = [[False for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
-        self.draw_board()
-
-if __name__ == '__main__':
-    game = GameOfLife()
-    while True:
-        command = input("Enter a command (start, stop, clear, quit): ")
+        self.drawBoard()
+game = GameOfLife()
+while True:
+    try:    
+        command = input("Enter a command (start, clear, quit): ")
         if command == "start":
             game.start()
-        elif command == "stop":
-            game.stop()
         elif command == "clear":
             game.clear()
         elif command == "quit":
             break
         else:
             print("Invalid command")
+    except KeyboardInterrupt:
+        continue
+    
