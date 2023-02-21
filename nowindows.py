@@ -14,13 +14,15 @@ class GameOfLife:
         self.board = [[random.choice([0, 1]) for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
 
     def drawBoard(self):
+        board_str = ""
         for row in range(GRID_HEIGHT):
             for col in range(GRID_WIDTH):
                 if self.board[row][col]:
-                    print("⬛", end="")
+                    board_str += "⬜"
                 else:
-                    print("⬜", end="")
-            print()
+                    board_str += "⬛"
+            board_str += "\n"
+        print(board_str)
 
     def countNeighbors(self, row, col):
         count = 0
@@ -47,7 +49,7 @@ class GameOfLife:
         self.drawBoard()
         if not self.paused:
             time.sleep(0.5)
-            print("========================================")
+            print("==============================================")
             self.update()
 
     def start(self):
@@ -57,18 +59,36 @@ class GameOfLife:
     def clear(self):
         self.board = [[False for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
         self.drawBoard()
-game = GameOfLife()
-while True:
-    try:    
-        command = input("Enter a command (start, clear, quit): ")
-        if command == "start":
-            game.start()
-        elif command == "clear":
-            game.clear()
-        elif command == "quit":
-            break
-        else:
-            print("Invalid command")
-    except KeyboardInterrupt:
-        continue
-    
+
+    def regenerate(self):
+        self.createBoard()
+        self.drawBoard()
+
+def main():
+    game = GameOfLife()
+    while True:
+        try:
+            print("\n\n\n")
+            print("Jeu de la vie")
+            print("Commande:")
+            print("start - commence le jeu")
+            print("clear - vide le tableau")
+            print("regenerate - genere un nouveau tableau")
+            print("quit - quitte le jeu")
+
+            command = input("> ")
+            if command == "start":
+                game.start()
+            elif command == "clear":
+                game.clear()
+            elif command == "regenerate":
+                game.regenerate()
+            elif command == "quit":
+                break
+            else:
+                print("Invalid command")
+        except KeyboardInterrupt:
+            continue
+
+if __name__ == "__main__":
+    main()
